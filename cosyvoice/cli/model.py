@@ -54,7 +54,8 @@ class CosyVoiceModel:
     def load(self, llm_model, flow_model, hift_model):
         self.llm.load_state_dict(torch.load(llm_model, map_location=self.device))
         self.llm.to(self.device).eval()
-        self.llm.half()
+        if torch.cuda.is_available():
+            self.llm.half()
         self.flow.load_state_dict(torch.load(flow_model, map_location=self.device))
         self.flow.to(self.device).eval()
         self.hift.load_state_dict(torch.load(hift_model, map_location=self.device))

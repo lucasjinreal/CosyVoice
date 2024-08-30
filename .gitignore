@@ -52,3 +52,4 @@ pretrained_models/*
 *.egg-info/
 build/
 upload_pypi.sh
+dist/
