@@ -51,3 +51,4 @@ pretrained_models/*
 *_pb2.py
 *.egg-info/
 build/
+upload_pypi.sh
