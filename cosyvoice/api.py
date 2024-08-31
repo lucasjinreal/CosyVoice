@@ -54,6 +54,13 @@ class CosyVoiceTTS:
             else:
                 a = next(a)
                 yield a["tts_speech"]
+        elif return_format == "bytes":
+            if stream:
+                for itm in a:
+                    yield itm["tts_speech"]
+            else:
+                a = next(a)
+                yield a["tts_speech"]
         elif return_format == "file" and not stream:
             out_f = "out.wav"
             a = next(a)

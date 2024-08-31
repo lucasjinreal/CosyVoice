@@ -12,9 +12,12 @@ you can only server one model at once.
 
 import argparse
 from contextlib import asynccontextmanager
+import io
 from typing import Literal, TypedDict, Union
 import fastapi
 from fastapi import FastAPI, Request, Response
+import librosa
+import numpy as np
 from uvicorn.config import Config
 from uvicorn import Server
 from .api import CosyVoiceTTS
@@ -22,9 +25,12 @@ import torch
 from pydantic import BaseModel
 import os
 import logging
+from scipy.io.wavfile import write
 
-
-# logging.disable(logging.CRITICAL)
+# logging.disable(logging.INFO)
+logger_librosa = logging.getLogger("librosa")
+logger_librosa.setLevel(logging.CRITICAL)
+logging.getLogger("numba").setLevel(logging.WARNING)
 
 
 class SpeechCreateParams(BaseModel):
@@ -59,13 +65,22 @@ async def text_to_speech(request: SpeechCreateParams, request_raw: Request):
     # do tts how to return?
     global model
 
-    res_f = model.tts_instruct(txt, request.voice, return_format="file")
+    res = model.tts_instruct(txt, request.voice, return_format="wav")
     # print(res_f)
-    res_f = next(res_f)
+    res = next(res)
+    res = res.cpu().numpy()[0]
+    # print(res, res.dtype)
     response_format = request.response_format
-    with open(res_f, "rb") as file:
-        buffer = file.read()
-    return Response(content=buffer, media_type=f"audio/{response_format}")
+    # with open(res_f, "rb") as file:
+    #     buffer = file.read()
+
+    # return is sr 16k int16 wav data, it can be directly played
+    audio_chunk = librosa.resample(res, orig_sr=24000, target_sr=16000)
+    audio_int16 = (audio_chunk * 32768).astype(np.int16)
+    buffer = io.BytesIO()
+    write(buffer, 16000, audio_int16)
+    buffer.seek(0)
+    return Response(content=buffer.read(), media_type=f"audio/{response_format}")
 
 
 def main():
