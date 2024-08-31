@@ -64,5 +64,12 @@ setup(
         "gdown",
         "wget",
         "openai-whisper",
+        "fastapi",
+        "librosa",
+        "uvicorn",
+        "loguru",
+        "hyperpyyaml",
+        "onnxruntime-gpu",
+        "modelscope"
     ],
 )
