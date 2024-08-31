@@ -86,7 +86,7 @@ async def text_to_speech(request: SpeechCreateParams, request_raw: Request):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", type=str, default="127.0.0.1")
-    parser.add_argument("--port", type=str, default=8088)
+    parser.add_argument("--port", type=int, default=8088)
     parser.add_argument("--type", type=str, default="instruct")
     parser.add_argument("--https", action="store_true")
     parser.add_argument("--debug", action="store_true")

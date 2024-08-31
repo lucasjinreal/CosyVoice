@@ -70,6 +70,8 @@ setup(
         "loguru",
         "hyperpyyaml",
         "onnxruntime-gpu",
-        "modelscope"
+        "modelscope",
+        "diffusers",
+        "lightning"
     ],
 )
