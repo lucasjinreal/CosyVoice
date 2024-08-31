@@ -53,3 +53,4 @@ pretrained_models/*
 build/
 upload_pypi.sh
 dist/
+checkpoints/

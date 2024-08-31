@@ -21,7 +21,7 @@ from cosyvoice.utils.file_utils import logging
 
 class CosyVoice:
 
-    def __init__(self, model_dir, load_jit=True):
+    def __init__(self, model_dir, load_jit=True, device='cuda'):
         instruct = True if '-Instruct' in model_dir else False
         self.model_dir = model_dir
         if not os.path.exists(model_dir):
@@ -35,7 +35,7 @@ class CosyVoice:
                                           '{}/spk2info.pt'.format(model_dir),
                                           instruct,
                                           configs['allowed_special'])
-        self.model = CosyVoiceModel(configs['llm'], configs['flow'], configs['hift'])
+        self.model = CosyVoiceModel(configs['llm'], configs['flow'], configs['hift'], device=device)
         self.model.load('{}/llm.pt'.format(model_dir),
                         '{}/flow.pt'.format(model_dir),
                         '{}/hift.pt'.format(model_dir))

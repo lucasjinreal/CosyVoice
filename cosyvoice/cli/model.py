@@ -25,8 +25,9 @@ class CosyVoiceModel:
     def __init__(self,
                  llm: torch.nn.Module,
                  flow: torch.nn.Module,
-                 hift: torch.nn.Module):
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+                 hift: torch.nn.Module,
+                 device='cuda'):
+        self.device = device
         self.llm = llm
         self.flow = flow
         self.hift = hift
@@ -170,4 +171,5 @@ class CosyVoiceModel:
             self.llm_end_dict.pop(this_uuid)
             self.mel_overlap_dict.pop(this_uuid)
             self.hift_cache_dict.pop(this_uuid)
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
